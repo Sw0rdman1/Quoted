@@ -1,5 +1,5 @@
-// contexts/QuoteContext.tsx
 import { getDailyQuote } from '@/utils/quoteUtils';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
 interface Quote {
@@ -12,19 +12,62 @@ interface QuoteContextType {
     quote: Quote;
 }
 
-const QuoteContext = createContext<QuoteContextType | undefined>(undefined);
+const QUOTE_CACHE_KEY = 'cached_daily_quote';
+const QUOTE_TIMESTAMP_KEY = 'quote_timestamp';
 
+const QuoteContext = createContext<QuoteContextType | undefined>(undefined);
 
 export const QuoteProvider = ({ children }: { children: ReactNode }) => {
     const [quote, setQuote] = useState<Quote | null>(null);
 
+
+    const refreshQuote = async () => {
+        try {
+            const newQuote = getDailyQuote();
+
+            setQuote(newQuote);
+            await AsyncStorage.setItem(QUOTE_CACHE_KEY, JSON.stringify(newQuote));
+            await AsyncStorage.setItem(QUOTE_TIMESTAMP_KEY, Date.now().toString());
+        } catch (error) {
+            console.error('Error updating quote cache:', error);
+            // Still update state even if caching fails
+            const newQuote = getDailyQuote();
+            setQuote(newQuote);
+        }
+    };
+
+    const getQuote = async () => {
+        console.log('Fetching quote...');
+
+        try {
+            const cachedQuote = await AsyncStorage.getItem(QUOTE_CACHE_KEY);
+            const cachedTimestamp = await AsyncStorage.getItem(QUOTE_TIMESTAMP_KEY);
+
+            if (cachedQuote && cachedTimestamp) {
+                const today = new Date().toDateString();
+                const cachedDate = new Date(parseInt(cachedTimestamp)).toDateString();
+
+                if (today === cachedDate) {
+                    setQuote(JSON.parse(cachedQuote));
+                    return;
+                }
+            }
+
+            await refreshQuote();
+        } catch (error) {
+            console.error('Error accessing quote cache:', error);
+            const newQuote = getDailyQuote();
+            setQuote(newQuote);
+        }
+    };
+
+
     useEffect(() => {
-        setQuote(getDailyQuote());
+        getQuote();
     }, []);
 
     return (
-        <QuoteContext.Provider value={{ quote: quote! }
-        }>
+        <QuoteContext.Provider value={{ quote: quote! }}>
             {children}
         </QuoteContext.Provider>
     );

@@ -9,5 +9,7 @@ export function getDailyQuote() {
     );
 
     const index = diffDays % quotes.length;
+    console.log(`Index: ${index}, Quote: ${quotes[index].text}`);
+
     return quotes[index];
 }
