@@ -37,7 +37,6 @@ export const QuoteProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const getQuote = async () => {
-        console.log('Fetching quote...');
 
         try {
             const cachedQuote = await AsyncStorage.getItem(QUOTE_CACHE_KEY);
