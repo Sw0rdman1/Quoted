@@ -1,15 +1,18 @@
+const tint = '#A67C52'
 
 export const Colors = {
   light: {
+    primary: tint,
     title: '#8D7B68',
     text: '#776B5D',
     background: '#EBE3D5',
     surface: '#F3EEEA',
   },
   dark: {
-    title: '#328E6E',
-    text: '#67AE6E',
-    background: '#90C67C',
-    surface: '#E1EEBC',
-  },
+    primary: tint,
+    title: '#DCC5A0',
+    text: '#D0C4B0',
+    background: '#2C221B',
+    surface: '#3A2F27',
+  }
 };

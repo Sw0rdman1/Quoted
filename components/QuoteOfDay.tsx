@@ -2,18 +2,20 @@ import { useQuote } from '@/contexts/QuoteContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 
-const HomeQuote = () => {
+const QuoteOfDay = () => {
     const { quote } = useQuote();
+    const { top } = useSafeAreaInsets();
     const title = useThemeColor({}, 'title');
     const text = useThemeColor({}, 'text');
-    const quoteText = `"${quote?.text}"` || 'Loading...';
-    const quoteAuthor = quote?.author || 'Loading...';
+    const quoteText = `"${quote?.text}"` || '';
+    const quoteAuthor = quote?.author || '';
 
 
     return (
-        <View style={styles.quoteContainer}>
+        <View style={[styles.quoteContainer, { paddingTop: top + 15 }]}>
             <View style={styles.row}>
                 <Text style={[styles.title, { color: title }]}>
                     Today's Quote
@@ -32,11 +34,10 @@ const HomeQuote = () => {
     )
 }
 
-export default HomeQuote
+export default QuoteOfDay
 
 const styles = StyleSheet.create({
     quoteContainer: {
-        justifyContent: 'center',
         flex: 1,
         padding: 24,
         gap: 16,
@@ -52,7 +53,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     date: {
-        fontSize: 14,
+        fontSize: 16,
         fontStyle: 'italic',
     },
     quoteText: {
