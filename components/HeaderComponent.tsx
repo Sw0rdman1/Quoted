@@ -41,8 +41,8 @@ const styles = StyleSheet.create({
         textShadowRadius: 1,
     },
     headerImage: {
-        top: -55,
-        left: -50,
+        top: -35,
+        left: -100,
         position: 'absolute',
         zIndex: -1,
         shadowColor: '#000',
