@@ -1,5 +1,7 @@
+import { useImageContext } from '@/contexts/ImageContext';
 import { useColors } from '@/hooks/useThemeColor';
 import { Ionicons } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -7,6 +9,19 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 const OpenCameraButton = () => {
     const router = useRouter();
     const { text, title, primary } = useColors();
+    const { setImageUri } = useImageContext();
+
+    const handler = async () => {
+        const result = await ImagePicker.launchCameraAsync({
+            quality: 1,
+            allowsEditing: true,
+            aspect: [4, 3],
+        });
+        if (!result.canceled) {
+            setImageUri(result.assets[0].uri);
+            router.push('/edit');
+        }
+    }
 
     return (
         <View style={styles.container}>
@@ -20,7 +35,7 @@ const OpenCameraButton = () => {
 
             <TouchableOpacity
                 style={styles.button}
-                onPress={() => router.push('/camera')}
+                onPress={handler}
             >
                 <Ionicons name="camera-outline" size={24} color="#fff" />
                 <Text style={styles.buttonText}>Open Camera</Text>

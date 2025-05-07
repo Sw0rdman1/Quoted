@@ -13,3 +13,4 @@ export function getDailyQuote() {
 
     return quotes[index];
 }
+

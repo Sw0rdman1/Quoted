@@ -1,3 +1,4 @@
+import { ImageProvider } from '@/contexts/ImageContext';
 import { QuoteProvider } from '@/contexts/QuoteContext';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
@@ -19,15 +20,17 @@ export default function RootLayout() {
   }
 
   return (
-    <QuoteProvider>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack
-          screenOptions={{
-            headerShown: false,
-          }}
-        />
-        <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
-      </ThemeProvider>
-    </QuoteProvider>
+    <ImageProvider>
+      <QuoteProvider>
+        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+          <Stack
+            screenOptions={{
+              headerShown: false,
+            }}
+          />
+          <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
+        </ThemeProvider>
+      </QuoteProvider>
+    </ImageProvider>
   );
 }
