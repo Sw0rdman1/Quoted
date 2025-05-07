@@ -1,12 +1,14 @@
 import { useImageContext } from '@/contexts/ImageContext';
+import { useColors } from '@/hooks/useThemeColor';
 import { Image, StyleSheet, Text, View } from 'react-native';
 
 
 const EditScreen = () => {
     const { imageUri } = useImageContext();
+    const { surface } = useColors()
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, { backgroundColor: surface }]}>
             <Image
                 source={{ uri: imageUri || '' }}
                 style={styles.image}
