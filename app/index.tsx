@@ -29,7 +29,8 @@ const styles = StyleSheet.create({
     contentContainer: {
         padding: 24,
         alignItems: 'center',
-        gap: 16,
+        paddingTop: 30,
+        gap: 20,
         height: height - HEADER_HEIGHT,
 
     },

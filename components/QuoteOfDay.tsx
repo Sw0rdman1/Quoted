@@ -1,5 +1,6 @@
 import { useQuote } from '@/contexts/QuoteContext';
 import { useColors } from '@/hooks/useThemeColor';
+import { formatDate } from '@/utils/date';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
@@ -17,17 +18,13 @@ const QuoteOfDay = () => {
                     Today's Quote
                 </Text>
                 <Text style={[styles.date, { color: title }]}>
-                    {new Date().toLocaleDateString('en-US', {
-                        month: 'long',
-                        day: '2-digit',
-                        year: 'numeric',
-                    })}
+                    {formatDate(new Date())}
                 </Text>
             </View>
             <View style={{ borderBottomWidth: 1, marginBottom: 16, borderBottomColor: text, opacity: 0.2 }} />
             {quote &&
-                <View style={[styles.quote, { backgroundColor: `${background}95` }]}>
-                    <Text style={[styles.quoteText, { color: text }]}>
+                <View style={[styles.quote, { backgroundColor: `${background}` }]}>
+                    <Text style={[styles.quoteText, { color: primary }]}>
                         {quoteText}
                     </Text>
                     <Text style={[styles.quoteAuthor, { color: text }]}>
@@ -67,12 +64,27 @@ const styles = StyleSheet.create({
         gap: 8,
     },
     quoteText: {
-        fontSize: 20,
+        fontSize: 22,
         fontStyle: 'italic',
+        textAlign: 'center',
+        fontWeight: '300',
+        lineHeight: 28,
+        alignSelf: 'center',
+        textTransform: 'capitalize',
+        textShadowColor: '#000',
+        textShadowOffset: { width: 0, height: 1 },
+        textShadowRadius: 1,
+        fontFamily: 'ForumRegular',
     },
     quoteAuthor: {
         fontSize: 16,
         fontWeight: 'bold',
         textAlign: 'right',
+        fontStyle: 'italic',
+        textTransform: 'capitalize',
+        textShadowColor: '#000',
+        textShadowOffset: { width: 0, height: 1 },
+        textShadowRadius: 1,
+        fontFamily: 'ForumRegular',
     },
 })

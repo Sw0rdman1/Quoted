@@ -8,7 +8,7 @@ import { ActivityIndicator, Alert, StyleSheet, Text, TouchableOpacity, View } fr
 
 const OpenCameraButton = () => {
     const router = useRouter();
-    const { text, title, primary } = useColors();
+    const { text, title, primary, surface } = useColors();
     const { setImageUri } = useImageContext();
     const [loading, setLoading] = useState(false);
 
@@ -54,9 +54,7 @@ const OpenCameraButton = () => {
                 Let today’s quote guide your lens.
             </Text>
 
-            <Text style={[styles.explanation, { color: title }]}>
-                Take a photo that reflects or enhances what this quote means to you.
-            </Text>
+
 
             <TouchableOpacity
                 style={styles.button}
@@ -64,17 +62,19 @@ const OpenCameraButton = () => {
                 disabled={loading}
             >
                 {loading ? (
-                    <ActivityIndicator size="small" color="#fff" />
+                    <ActivityIndicator size="small" color={surface} />
                 ) : (
                     <>
-                        <Ionicons name="camera-outline" size={24} color="#fff" />
-                        <Text style={styles.buttonText}>Open Camera</Text>
+                        <Ionicons name="camera-outline" size={24} color={surface} />
+                        <Text style={[styles.buttonText, { color: surface }]}>
+                            Open Camera
+                        </Text>
                     </>
                 )}
             </TouchableOpacity>
 
-            <Text style={[styles.subtext, { color: text }]}>
-                Every image tells a story. Let yours begin.
+            <Text style={[styles.explanation, { color: title }]}>
+                Take a photo that reflects or enhances what this quote means to you.
             </Text>
         </View>
     );
@@ -87,6 +87,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         gap: 24,
+        width: '100%',
     },
     tagline: {
         fontSize: 18,
@@ -95,36 +96,34 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     explanation: {
-        fontSize: 16,
+        fontSize: 18,
         textAlign: 'center',
         fontStyle: 'italic',
-        maxWidth: 300,
         opacity: 0.8,
     },
     subtext: {
-        fontSize: 14,
+        fontSize: 16,
         textAlign: 'center',
         fontStyle: 'italic',
         opacity: 0.7,
-        maxWidth: 300,
     },
     button: {
         flexDirection: 'row',
         backgroundColor: '#A67C52',
         paddingVertical: 14,
-        paddingHorizontal: 24,
         borderRadius: 32,
         alignItems: 'center',
+        justifyContent: 'center',
         gap: 10,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.2,
         shadowRadius: 6,
         elevation: 5,
+        width: '80%',
     },
     buttonText: {
-        color: '#fff',
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: '700',
     },
 });
