@@ -29,8 +29,6 @@ const OpenCameraButton = () => {
 
             const result = await ImagePicker.launchCameraAsync({
                 quality: 1,
-                allowsEditing: true,
-                aspect: [3, 3],
             });
 
             if (!result.canceled) {

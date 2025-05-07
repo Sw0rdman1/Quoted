@@ -53,6 +53,7 @@ export default function DragQuote() {
 
 const styles = StyleSheet.create({
     container: {
+        position: 'absolute',
         width: '80%',
         padding: 10,
         borderRadius: 10,
