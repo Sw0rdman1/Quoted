@@ -13,6 +13,7 @@ export default function RootLayout() {
 
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    ForumRegular: require('../assets/fonts/Forum-Regular.ttf'),
   });
 
   if (!loaded) {

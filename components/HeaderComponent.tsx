@@ -32,13 +32,14 @@ const styles = StyleSheet.create({
         gap: 10,
     },
     title: {
-        fontSize: 62,
-        fontWeight: '700',
+        fontSize: 72,
+        fontWeight: '300',
         textAlign: 'center',
         textTransform: 'uppercase',
         letterSpacing: 2,
         textShadowOffset: { width: 0, height: 1 },
         textShadowRadius: 1,
+        fontFamily: 'ForumRegular',
     },
     headerImage: {
         top: -35,
