@@ -3,25 +3,50 @@ import { useColors } from '@/hooks/useThemeColor';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
-import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useState } from 'react';
+import { ActivityIndicator, Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const OpenCameraButton = () => {
     const router = useRouter();
     const { text, title, primary } = useColors();
     const { setImageUri } = useImageContext();
+    const [loading, setLoading] = useState(false);
 
-    const handler = async () => {
-        const result = await ImagePicker.launchCameraAsync({
-            quality: 1,
-            allowsEditing: true,
-            aspect: [4, 3],
-        });
-        if (!result.canceled) {
-            setImageUri(result.assets[0].uri);
-            router.push('/edit');
+    const openCameraHandler = async () => {
+        try {
+            setLoading(true);
+            const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+
+            if (!permissionResult.granted) {
+                Alert.alert(
+                    'Permission Denied',
+                    'Camera access is required to take photos.',
+                    [{ text: 'OK' }]
+                );
+                setLoading(false);
+                return;
+            }
+
+            const result = await ImagePicker.launchCameraAsync({
+                quality: 1,
+                allowsEditing: true,
+                aspect: [3, 3],
+            });
+
+            if (!result.canceled) {
+                setImageUri(result.assets[0].uri);
+                router.push('/edit');
+            }
+        } catch (error) {
+            Alert.alert(
+                'Camera Error',
+                'An unexpected error occurred while accessing the camera. Please try again.',
+                [{ text: 'OK' }]
+            );
+        } finally {
+            setLoading(false);
         }
-    }
+    };
 
     return (
         <View style={styles.container}>
@@ -29,27 +54,33 @@ const OpenCameraButton = () => {
                 Let today’s quote guide your lens.
             </Text>
 
-            <Text style={[styles.explaination, { color: title }]}>
+            <Text style={[styles.explanation, { color: title }]}>
                 Take a photo that reflects or enhances what this quote means to you.
             </Text>
 
             <TouchableOpacity
                 style={styles.button}
-                onPress={handler}
+                onPress={openCameraHandler}
+                disabled={loading}
             >
-                <Ionicons name="camera-outline" size={24} color="#fff" />
-                <Text style={styles.buttonText}>Open Camera</Text>
+                {loading ? (
+                    <ActivityIndicator size="small" color="#fff" />
+                ) : (
+                    <>
+                        <Ionicons name="camera-outline" size={24} color="#fff" />
+                        <Text style={styles.buttonText}>Open Camera</Text>
+                    </>
+                )}
             </TouchableOpacity>
 
             <Text style={[styles.subtext, { color: text }]}>
                 Every image tells a story. Let yours begin.
             </Text>
-
         </View>
-    )
-}
+    );
+};
 
-export default OpenCameraButton
+export default OpenCameraButton;
 
 const styles = StyleSheet.create({
     container: {
@@ -63,7 +94,7 @@ const styles = StyleSheet.create({
         fontStyle: 'italic',
         fontWeight: 'bold',
     },
-    explaination: {
+    explanation: {
         fontSize: 16,
         textAlign: 'center',
         fontStyle: 'italic',
@@ -96,4 +127,5 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: '700',
     },
-})
+});
+""

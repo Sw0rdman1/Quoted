@@ -12,12 +12,6 @@ interface ImageContextType {
   imageUri: string | null;
   setImageUri: (uri: string | null) => void;
 
-  filter: FilterType;
-  setFilter: (filter: FilterType) => void;
-
-  edits: ImageEditSettings;
-  setEdits: (settings: ImageEditSettings) => void;
-
   reset: () => void;
 }
 
@@ -31,18 +25,14 @@ const ImageContext = createContext<ImageContextType | undefined>(undefined);
 
 export const ImageProvider = ({ children }: { children: ReactNode }) => {
   const [imageUri, setImageUri] = useState<string | null>(null);
-  const [filter, setFilter] = useState<FilterType>('none');
-  const [edits, setEdits] = useState<ImageEditSettings>(defaultEdits);
 
   const reset = () => {
     setImageUri(null);
-    setFilter('none');
-    setEdits(defaultEdits);
   };
 
   return (
     <ImageContext.Provider
-      value={{ imageUri, setImageUri, filter, setFilter, edits, setEdits, reset }}
+      value={{ imageUri, setImageUri, reset }}
     >
       {children}
     </ImageContext.Provider>

@@ -1,25 +1,16 @@
 import { useImageContext } from '@/contexts/ImageContext';
-import { useEffect, useState } from 'react';
-import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 
-const { width, height } = Dimensions.get('window');
 
 const EditScreen = () => {
-    const { imageUri } = useImageContext(); // get image URI from context
-    const [image, setImage] = useState(imageUri);
-
-    useEffect(() => {
-        if (imageUri) {
-        }
-    }, [imageUri]);
-
+    const { imageUri } = useImageContext();
 
     return (
         <View style={styles.container}>
             <Image
-                source={{ uri: image || '' }}
+                source={{ uri: imageUri || '' }}
                 style={styles.image}
-                resizeMode="contain"
+                resizeMode="cover"
             />
             <View style={styles.content}>
                 {/* Add your editing tools here */}
@@ -34,12 +25,11 @@ export default EditScreen
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
         width: '100%',
     },
     image: {
-        flex: 1,
         width: '100%',
+        aspectRatio: 1,
     },
     content: {
         flex: 1,
