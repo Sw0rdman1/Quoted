@@ -1,6 +1,6 @@
-import { getDailyQuote } from '@/utils/quoteUtils';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { getQuote } from '@/utils/quoteUtils';
+import BottomSheet from '@gorhom/bottom-sheet';
+import React, { createContext, ReactNode, useContext, useEffect, useRef, useState } from 'react';
 
 interface Quote {
     id: number;
@@ -10,63 +10,29 @@ interface Quote {
 
 interface QuoteContextType {
     quote: Quote;
+    bottomSheetRef: React.RefObject<BottomSheet | null>;
 }
 
-const QUOTE_CACHE_KEY = 'cached_daily_quote';
-const QUOTE_TIMESTAMP_KEY = 'quote_timestamp';
+
 
 const QuoteContext = createContext<QuoteContextType | undefined>(undefined);
 
 export const QuoteProvider = ({ children }: { children: ReactNode }) => {
     const [quote, setQuote] = useState<Quote | null>(null);
-
-
-    const refreshQuote = async () => {
-        try {
-            const newQuote = getDailyQuote();
-
-            setQuote(newQuote);
-            await AsyncStorage.setItem(QUOTE_CACHE_KEY, JSON.stringify(newQuote));
-            await AsyncStorage.setItem(QUOTE_TIMESTAMP_KEY, Date.now().toString());
-        } catch (error) {
-            console.error('Error updating quote cache:', error);
-            // Still update state even if caching fails
-            const newQuote = getDailyQuote();
-            setQuote(newQuote);
-        }
-    };
-
-    const getQuote = async () => {
-
-        try {
-            const cachedQuote = await AsyncStorage.getItem(QUOTE_CACHE_KEY);
-            const cachedTimestamp = await AsyncStorage.getItem(QUOTE_TIMESTAMP_KEY);
-
-            if (cachedQuote && cachedTimestamp) {
-                const today = new Date().toDateString();
-                const cachedDate = new Date(parseInt(cachedTimestamp)).toDateString();
-
-                if (today === cachedDate) {
-                    setQuote(JSON.parse(cachedQuote));
-                    return;
-                }
-            }
-
-            await refreshQuote();
-        } catch (error) {
-            console.error('Error accessing quote cache:', error);
-            const newQuote = getDailyQuote();
-            setQuote(newQuote);
-        }
-    };
+    const bottomSheetRef = useRef<BottomSheet | null>(null);
 
 
     useEffect(() => {
-        getQuote();
+        const fetchQuote = async () => {
+            const todayQyote = await getQuote();
+            setQuote(todayQyote);
+        };
+
+        fetchQuote();
     }, []);
 
     return (
-        <QuoteContext.Provider value={{ quote: quote! }}>
+        <QuoteContext.Provider value={{ quote: quote!, bottomSheetRef }}>
             {children}
         </QuoteContext.Provider>
     );

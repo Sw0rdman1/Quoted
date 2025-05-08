@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     },
     quote: {
         paddingVertical: 18,
-        paddingHorizontal: 12,
+        paddingHorizontal: 8,
         borderRadius: 16,
         gap: 8,
     },
@@ -70,7 +70,6 @@ const styles = StyleSheet.create({
         fontWeight: '300',
         lineHeight: 28,
         alignSelf: 'center',
-        textTransform: 'capitalize',
         textShadowColor: '#000',
         textShadowOffset: { width: 0, height: 1 },
         textShadowRadius: 1,

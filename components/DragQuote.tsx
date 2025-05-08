@@ -1,23 +1,37 @@
 import { useQuote } from '@/contexts/QuoteContext';
-import { useColors } from '@/hooks/useThemeColor';
-import { StyleSheet, Text, View } from 'react-native';
+import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
+import { useRef } from 'react';
+import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
+import Animated, { runOnJS, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 
+const { height, width } = Dimensions.get('window');
 
-
-export default function DragQuote() {
+const DragQuote = () => {
     const translateX = useSharedValue(0);
     const translateY = useSharedValue(0);
+    const bottomSheetRef = useRef<BottomSheet>(null);
     const { quote } = useQuote();
-    const { background, title } = useColors();
 
     const tap = Gesture.Tap().
-        numberOfTaps(1).
+        numberOfTaps(2).
         onStart(() => {
-            console.log('double tap');
+            translateX.value = 0;
+            translateY.value = 0;
+        }).onEnd(() => {
+            console.log('Double tap detected');
+            runOnJS(openBottomSheet)();
         });
 
+
+    const openBottomSheet = () => {
+        if (bottomSheetRef.current) {
+            console.log('BottomSheet ref:', bottomSheetRef.current);
+            bottomSheetRef.current.expand();
+        } else {
+            console.log('BottomSheet ref is NULL');
+        }
+    };
 
     const drag = Gesture.Pan().onChange(event => {
         translateX.value += event.changeX;
@@ -38,27 +52,43 @@ export default function DragQuote() {
     });
 
     return (
-        <GestureDetector gesture={drag}>
-            <Animated.View style={[containerStyle, { top: -350 }]}>
-                <GestureDetector gesture={tap}>
-                    <View style={[styles.container, { backgroundColor: `${title}90` }]}>
-                        <Text style={styles.quoteText}>{quote.text}</Text>
-                        <Text style={styles.quoteAuthor}>{quote.author}</Text>
-                    </View>
-                </GestureDetector>
-            </Animated.View>
-        </GestureDetector>
+        <>
+            <GestureDetector gesture={drag}>
+                <Animated.View style={[containerStyle, { top: -height + 120, left: 50 }]}>
+                    <GestureDetector gesture={tap}>
+                        <View style={[styles.container]}>
+                            <Text style={styles.quoteText}>{quote.text}</Text>
+                            <Text style={styles.quoteAuthor}>{quote.author}</Text>
+                        </View>
+                    </GestureDetector>
+                </Animated.View>
+            </GestureDetector>
+            <BottomSheet
+                ref={bottomSheetRef}
+                enablePanDownToClose={true}
+                snapPoints={['50%']}
+                enableContentPanningGesture={true}
+                index={-1}
+            >
+                <BottomSheetView >
+                    <Text>Awesome 🎉</Text>
+                </BottomSheetView>
+            </BottomSheet>
+        </>
     );
 }
+
+export default DragQuote;
 
 const styles = StyleSheet.create({
     container: {
         position: 'absolute',
-        width: '80%',
+        width: width - 100,
         padding: 10,
         borderRadius: 10,
         alignItems: 'center',
         justifyContent: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     quoteText: {
         color: '#fff',
@@ -71,6 +101,6 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontFamily: 'ForumRegular',
         alignSelf: 'flex-end',
-        marginTop: 5,
+        marginTop: 10,
     },
 });
